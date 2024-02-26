@@ -3,6 +3,7 @@ package com.ra.entity;
 import com.ra.util.Column;
 import com.ra.util.Id;
 import com.ra.util.Table;
+import com.ra.util.Name;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ public class Product {
     @Id
     @Column(name = "Product_Id")
     private String productId;
+    @Name
     @Column(name = "Product_Name")
     private String productName;
     @Column(name = "Manufacturer")
@@ -18,7 +20,7 @@ public class Product {
     @Column(name = "Created")
     private Date created;
     @Column(name = "Batch")
-    private byte batch;
+    private Integer batch;
     @Column(name = "Quantity")
     private int quantity;
     @Column(name = "Product_Status")
@@ -27,7 +29,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String productId, String productName, String manufacturer, Date created, byte batch, int quantity, boolean productStatus) {
+    public Product(String productId, String productName, String manufacturer, Date created, Integer  batch, int quantity, boolean productStatus) {
         this.productId = productId;
         this.productName = productName;
         this.manufacturer = manufacturer;
@@ -69,11 +71,11 @@ public class Product {
         this.created = created;
     }
 
-    public byte getBatch() {
+    public Integer getBatch() {
         return batch;
     }
 
-    public void setBatch(byte batch) {
+    public void setBatch(Integer batch) {
         this.batch = batch;
     }
 
@@ -92,4 +94,5 @@ public class Product {
     public void setProductStatus(boolean productStatus) {
         this.productStatus = productStatus;
     }
+
 }

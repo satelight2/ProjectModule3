@@ -1,6 +1,6 @@
 package com.ra.model;
 
 public interface PermissionType {
-    boolean ADMIN = false;
-    boolean USER = true;
+    boolean ADMIN = true;
+    boolean USER = false;
 }

@@ -18,4 +18,32 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAll() {
         return this.productRepository.findAll(Product.class);
     }
+
+    @Override
+    public Product addProduct(Product product) {
+        return this.productRepository.add(product);
+    }
+
+    @Override
+    public Product findbyID(String id) {
+        return this.productRepository.findId(Product.class, id);
+    }
+
+
+    @Override
+    public Product  updateProduct(Product product) {
+        return this.productRepository.edit(product);
+    }
+
+    @Override
+    public Product searchProductByName(String name) {
+        return this.productRepository.findByName(Product.class, name);
+    }
+
+    @Override
+    public List<Product> findPagination(int startPosition, int maxResult) {
+        return this.productRepository.findByPagination(Product.class,startPosition, maxResult);
+    }
+
+
 }

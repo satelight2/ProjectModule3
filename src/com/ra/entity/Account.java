@@ -1,20 +1,20 @@
 package com.ra.entity;
 
-import com.ra.util.Column;
-import com.ra.util.Id;
-import com.ra.util.Table;
+import com.ra.util.*;
 
 @Table(name = "accounts")
 public class Account {
     @Id
     @Column(name = "Acc_Id")
     private int accId;
+    @Username
     @Column(name = "User_Name")
     private String userName;
     @Column(name = "Password")
     private String password;
     @Column(name = "Permission")
     private boolean permission;
+    @EmpID
     @Column(name = "Emp_Id")
     private String empId;
     @Column(name = "Acc_Status")
@@ -78,5 +78,17 @@ public class Account {
 
     public void setAccStatus(boolean accStatus) {
         this.accStatus = accStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accId=" + accId +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                ", permission=" + permission +
+                ", empId='" + empId + '\'' +
+                ", accStatus=" + accStatus +
+                '}';
     }
 }

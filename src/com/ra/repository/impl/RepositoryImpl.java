@@ -1,15 +1,13 @@
 package com.ra.repository.impl;
 
 import com.ra.repository.Repository;
-import com.ra.util.Column;
-import com.ra.util.Id;
-import com.ra.util.MySqlConnection;
-import com.ra.util.Table;
+import com.ra.util.*;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -36,6 +34,31 @@ public class RepositoryImpl<T> implements Repository<T> {
     }
 
     @Override
+    public List<T> findByPagination(Class<T> entityClass, int startPosition, int maxResult) {
+            List<T> result = new ArrayList<>();
+            try (Connection conn = new MySqlConnection().getConnection()) {
+                String sql = MessageFormat.format("SELECT * FROM {0}", tblName(entityClass));
+                sql += " LIMIT ? OFFSET ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                int parameterIndex = 1;
+                ps.setInt(parameterIndex++, maxResult);
+                ps.setInt(parameterIndex++, (startPosition - 1) * maxResult);
+                ResultSet rs = ps.executeQuery();
+                List<Field> fields = getColumns(entityClass);
+                while (rs.next()) {
+                    T entity = readResultSet(rs, entityClass);
+                    result.add(entity);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return result;
+    }
+
+
+
+
+    @Override
     public T findId(Class<T> entityClass, Object... keys) {
         try  (Connection conn = new MySqlConnection().getConnection()) {
             List<Field> keysField = getKey(entityClass);
@@ -46,6 +69,104 @@ public class RepositoryImpl<T> implements Repository<T> {
             int index = 1;
             for (Object key : keys)
                 ps.setObject(index++, key);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                T entity = readResultSet(rs, entityClass);
+                return entity;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public T findByName(Class<T> entityClass, Object... keys) {
+        try  (Connection conn = new MySqlConnection().getConnection()) {
+            List<Field> keysField = getName(entityClass);
+            String keysName = keysField.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
+            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1}", tblName(entityClass), keysName);
+            System.out.println(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for (Object key : keys)
+                ps.setObject(index++, key);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                T entity = readResultSet(rs, entityClass);
+                return entity;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public T findByEmpID(Class<T> entityClass, Object... keys) {
+        try  (Connection conn = new MySqlConnection().getConnection()) {
+            List<Field> keysField = getUserEmpID(entityClass);
+            String keysName = keysField.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
+            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1}", tblName(entityClass), keysName);
+            System.out.println(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for (Object key : keys)
+                ps.setObject(index++, key);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                T entity = readResultSet(rs, entityClass);
+                return entity;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public T findByUsername(Class<T> entityClass, Object... keys) {
+        try  (Connection conn = new MySqlConnection().getConnection()) {
+            List<Field> keysField = getUsername(entityClass);
+            String keysName = keysField.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
+            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1}", tblName(entityClass), keysName);
+            System.out.println(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for (Object key : keys)
+                ps.setObject(index++, key);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                T entity = readResultSet(rs, entityClass);
+                return entity;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public T findByNameOrID(Class<T> entityClass, String any) {
+        try (Connection conn = new MySqlConnection().getConnection()) {
+            List<Field> keyFields = getKey(entityClass);
+            List<Field> nameFields = getName(entityClass);
+
+            String keysCondition = keyFields.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(" OR "));
+            String namesCondition = nameFields.stream().map(f -> colName(f) + " LIKE ?").collect(Collectors.joining(" OR "));
+
+            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1} OR {2}", tblName(entityClass), keysCondition, namesCondition);
+            System.out.println(sql);
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for (Field field : keyFields) {
+                ps.setObject(index++, any);
+            }
+            for (Field field : nameFields) {
+                ps.setObject(index++, "%" + any + "%"); // Tìm kiếm theo mẫu tên
+            }
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 T entity = readResultSet(rs, entityClass);
@@ -133,14 +254,25 @@ public class RepositoryImpl<T> implements Repository<T> {
         for (Field field : fields) {
             field.setAccessible(true);
             if (field.getType().equals(Date.class)) {
-                SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                field.set(entity, fmt.parse(rs.getString(colName(field))));
+                int columnType = rs.getMetaData().getColumnType(rs.findColumn(colName(field)));
+                if (columnType == Types.DATE) {
+                    // Sử dụng định dạng ngày phù hợp với kiểu dữ liệu DATE
+                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                    field.set(entity, fmt.parse(rs.getString(colName(field))));
+                } else if (columnType == Types.TIMESTAMP) {
+                    // Sử dụng định dạng ngày phù hợp với kiểu dữ liệu TIMESTAMP
+                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    field.set(entity, fmt.parse(rs.getString(colName(field))));
+                } else {
+                    field.set(entity, rs.getObject(colName(field)));
+                }
             } else {
                 field.set(entity, rs.getObject(colName(field)));
             }
         }
         return entity;
     }
+
     private String colName(Field field) {
         Column column = field.getAnnotation(Column.class);
         if (Objects.nonNull(column))
@@ -169,6 +301,25 @@ public class RepositoryImpl<T> implements Repository<T> {
         List<Field> fields = getColumns(entityClass);
         return fields.stream()
                 .filter(f -> Objects.nonNull(f.getAnnotation(Id.class)))
+                .collect(Collectors.toList());
+    }
+
+    private List<Field> getName(Class<T> entityClass) {
+        List<Field> fields = getColumns(entityClass);
+        return fields.stream()
+                .filter(f -> Objects.nonNull(f.getAnnotation(Name.class)))
+                .collect(Collectors.toList());
+    }
+    private List<Field> getUsername(Class<T> entityClass) {
+        List<Field> fields = getColumns(entityClass);
+        return fields.stream()
+                .filter(f -> Objects.nonNull(f.getAnnotation(Username.class)))
+                .collect(Collectors.toList());
+    }
+    private List<Field> getUserEmpID(Class<T> entityClass) {
+        List<Field> fields = getColumns(entityClass);
+        return fields.stream()
+                .filter(f -> Objects.nonNull(f.getAnnotation(EmpID.class)))
                 .collect(Collectors.toList());
     }
     // </editor-fold>

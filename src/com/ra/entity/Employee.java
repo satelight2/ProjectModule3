@@ -2,6 +2,7 @@ package com.ra.entity;
 
 import com.ra.util.Column;
 import com.ra.util.Id;
+import com.ra.util.Name;
 import com.ra.util.Table;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ public class Employee {
     @Id
     @Column(name = "Emp_Id")
     private String empId;
+    @Name
     @Column(name = "Emp_Name")
     private String empName;
     @Column(name = "Birth_Of_Date")
@@ -22,12 +24,12 @@ public class Employee {
     @Column(name = "Address")
     private String address;
     @Column(name = "Emp_Status")
-    private byte empStatus;
+    private int empStatus;
 
     public Employee() {
     }
 
-    public Employee(String empId, String empName, Date birthOfDate, String email, String phone, String address, byte empStatus) {
+    public Employee(String empId, String empName, Date birthOfDate, String email, String phone, String address, int empStatus) {
         this.empId = empId;
         this.empName = empName;
         this.birthOfDate = birthOfDate;
@@ -85,11 +87,24 @@ public class Employee {
         this.address = address;
     }
 
-    public byte getEmpStatus() {
+    public int getEmpStatus() {
         return empStatus;
     }
 
-    public void setEmpStatus(byte empStatus) {
+    public void setEmpStatus(int empStatus) {
         this.empStatus = empStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "empId='" + empId + '\'' +
+                ", empName='" + empName + '\'' +
+                ", birthOfDate=" + birthOfDate +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
+                ", empStatus=" + empStatus +
+                '}';
     }
 }
