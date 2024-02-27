@@ -1,10 +1,15 @@
 package com.ra.view.userMenu;
 
+import com.ra.entity.BillDetails;
+import com.ra.manager.BillManager;
+import com.ra.manager.ReceiptManager;
 import com.ra.util.Console;
 import com.ra.view.adminMenu.*;
 
 public class MUserMenu {
     public static void roleUser() {
+        BillManager billManager = new BillManager();
+        ReceiptManager receiptManager = new ReceiptManager();
         boolean check = true;
         do {
             System.out.println("MENU USER");
@@ -18,34 +23,42 @@ public class MUserMenu {
             System.out.println("7. Cập nhật phiếu xuất");
             System.out.println("8. Tìm kiếm phiếu xuất");
             System.out.println("9. Thoát");
+            System.out.print(" Lựa chọn của bạn là : ");
 
             try{
                 int choose = Integer.parseInt(Console.scanner.nextLine());
                 switch (choose){
                     case 1:
-                        System.out.println("Quản lý sản phẩm");
-                        ProductMenu.pMenu();
-                        //  productService.addProduct();
+                        System.out.println("1. Danh sách phiếu nhập theo trạng thái");
+                        receiptManager.show();
                         break;
                     case 2:
-                        System.out.println("Quản lý nhân viên");
-                        EmployeeMenu.eMenu();
+                        System.out.println("2. Tạo phiếu nhập");
+                        receiptManager.add();
                         break;
                     case 3:
-                        System.out.println("Quản lý tài khoản");
-                        AccountMenu.aMenu();
+                        System.out.println("3. Cập nhật phiếu nhập");
+                        receiptManager.update();
                         break;
                     case 4:
-                        System.out.println("Quản lý phiếu nhập");
-                        ReceiptMenu.reMenu();
+                        System.out.println("4. Tìm kiếm phiếu nhập");
+                        receiptManager.search();
                         break;
                     case 5:
-                        System.out.println("Quản lý phiếu xuất");
-                        BillMenu.billMenu();
+                        System.out.println("5. Danh sách phiếu xuất theo trạng thái");
+                        billManager.show();
                         break;
                     case 6:
-                        System.out.println("Quản lý báo cáo");
-                        StatisticMenu.statisticMenu();
+                        System.out.println("6. Tạo phiếu xuất");
+                        billManager.add();
+                        break;
+                    case 7:
+                        System.out.println("7. Cập nhật phiếu xuất");
+                        billManager.update();
+                        break;
+                    case 8:
+                        System.out.println("8. Tìm kiếm phiếu xuất");
+                        billManager.search();
                         break;
 
                     case 9:

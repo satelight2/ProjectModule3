@@ -10,6 +10,7 @@ public interface Repository<T> {
     T findByEmpID(Class<T> entityClass, Object... keys);
     T findByUsername(Class<T> entityClass, Object... keys);
     T findByNameOrID(Class<T> entityClass, String any);
+    T findByBillCodeOrID(Class<T> entityClass, String any);
     T add(T entity);
     T edit(T entity);
     boolean remove(Class<T> entityClass, Object... keys);

@@ -38,8 +38,16 @@ public class AccountMenu {
                         account.setUserName(Console.scanner.nextLine());
                         System.out.println("Nhập password: ");
                         account.setPassword(Console.scanner.nextLine());
-                        System.out.println("Nhập permission");
-                        account.setPermission(Boolean.parseBoolean(Console.scanner.nextLine()));
+                        System.out.println("Nhập quyền truy cập:");
+                        System.out.println("True :  Admin");
+                        System.out.println("False :  User");
+                        System.out.print("Lựa chọn của bạn là: ");
+                        String permission = Console.scanner.nextLine();
+                        if(permission.equals("true")){
+                            account.setPermission(true);
+                        }else {
+                            account.setPermission(false);
+                        }
                         System.out.println("Nhập mã nhân viên: ");
                         String empID;
                         Employee employee;

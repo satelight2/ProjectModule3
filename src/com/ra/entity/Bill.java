@@ -1,5 +1,6 @@
 package com.ra.entity;
 
+import com.ra.util.BillCode;
 import com.ra.util.Column;
 import com.ra.util.Id;
 import com.ra.util.Table;
@@ -11,6 +12,7 @@ public class Bill {
     @Id
     @Column(name = "Bill_Id")
     private long billId;
+    @BillCode
     @Column(name = "Bill_Code")
     private String billCode;
     @Column(name = "Bill_Type")
@@ -24,12 +26,12 @@ public class Bill {
     @Column(name = "Auth_Date")
     private Date authDate;
     @Column(name = "Bill_Status")
-    private byte billStatus;
+    private int billStatus;
 
     public Bill() {
     }
 
-    public Bill(long billId, String billCode, boolean billType, String empIdCreated, Date created, String empIdAuth, Date authDate, byte billStatus) {
+    public Bill(long billId, String billCode, boolean billType, String empIdCreated, Date created, String empIdAuth, Date authDate, int billStatus) {
         this.billId = billId;
         this.billCode = billCode;
         this.billType = billType;
@@ -96,11 +98,25 @@ public class Bill {
         this.authDate = authDate;
     }
 
-    public byte getBillStatus() {
+    public int getBillStatus() {
         return billStatus;
     }
 
-    public void setBillStatus(byte billStatus) {
+    public void setBillStatus(int billStatus) {
         this.billStatus = billStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Bill{" +
+                "billId=" + billId +
+                ", billCode='" + billCode + '\'' +
+                ", billType=" + billType +
+                ", empIdCreated='" + empIdCreated + '\'' +
+                ", created=" + created +
+                ", empIdAuth='" + empIdAuth + '\'' +
+                ", authDate=" + authDate +
+                ", billStatus=" + billStatus +
+                '}';
     }
 }

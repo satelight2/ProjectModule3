@@ -9,9 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 public class ProductMenu {
+    public static ProductServiceImpl productService = new ProductServiceImpl();
     private static final int PAGE_SIZE = 10;
     public static void pMenu(){
-       ProductServiceImpl productService = new ProductServiceImpl();
+
        boolean check = true;
        do{
            System.out.println("******************PRODUCT MANAGEMENT****************");
@@ -33,28 +34,7 @@ public class ProductMenu {
                        showProductList();
                        break;
                    case 2:
-                       System.out.println("Thêm mới sản phẩm");
-                       Product product = new Product();
-                       System.out.println("Nhập mã sản phẩm: ");
-                       product.setProductId(Console.scanner.nextLine());
-                       System.out.println("Nhập tên sản phẩm: ");
-                       product.setProductName(Console.scanner.nextLine());
-                       System.out.println("Nhập nhà sản xuất: ");
-                       product.setManufacturer(Console.scanner.nextLine());
-                       Date pDate = new Date();
-                       product.setCreated(pDate);
-                       System.out.println("Nhập lô chứa sản phẩm: ");
-                       product.setBatch(Integer.parseInt(Console.scanner.nextLine()));
-                       System.out.println("Nhập số lượng sản phẩm: ");
-                       product.setQuantity(Integer.parseInt(Console.scanner.nextLine()));
-                       System.out.println("Nhập trạng thái sản phẩm: ");
-                       product.setProductStatus(Boolean.parseBoolean(Console.scanner.nextLine()));
-
-                       if( productService.addProduct(product) != null){
-                           System.out.println("Thêm sản phẩm thành công");
-                          }else {
-                            System.out.println("Thêm sản phẩm thất bại");
-                       }
+                        addProduct();
                        break;
                    case 3:
                        System.out.println("Thực hiện cập nhật Sản phẩm");
@@ -127,7 +107,7 @@ public class ProductMenu {
            }
        } while (check);
    }
-    public  static void showProductList() {
+    public static void showProductList() {
         ProductServiceImpl productService = new ProductServiceImpl();
         int page = 1;
         while (true) {
@@ -162,6 +142,30 @@ public class ProductMenu {
                 default:
                     System.out.println("Lựa chọn không hợp lệ.");
             }
+        }
+    }
+    public static void addProduct(){
+        System.out.println("Thêm mới sản phẩm");
+        Product product = new Product();
+        System.out.println("Nhập mã sản phẩm: ");
+        product.setProductId(Console.scanner.nextLine());
+        System.out.println("Nhập tên sản phẩm: ");
+        product.setProductName(Console.scanner.nextLine());
+        System.out.println("Nhập nhà sản xuất: ");
+        product.setManufacturer(Console.scanner.nextLine());
+        Date pDate = new Date();
+        product.setCreated(pDate);
+        System.out.println("Nhập lô chứa sản phẩm: ");
+        product.setBatch(Integer.parseInt(Console.scanner.nextLine()));
+        System.out.println("Nhập số lượng sản phẩm: ");
+        product.setQuantity(Integer.parseInt(Console.scanner.nextLine()));
+        System.out.println("Nhập trạng thái sản phẩm: ");
+        product.setProductStatus(Boolean.parseBoolean(Console.scanner.nextLine()));
+
+        if( productService.addProduct(product) != null){
+            System.out.println("Thêm sản phẩm thành công");
+        }else {
+            System.out.println("Thêm sản phẩm thất bại");
         }
     }
 }

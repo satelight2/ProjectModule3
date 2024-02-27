@@ -179,6 +179,37 @@ public class RepositoryImpl<T> implements Repository<T> {
     }
 
     @Override
+    public T findByBillCodeOrID(Class<T> entityClass, String any) {
+        try (Connection conn = new MySqlConnection().getConnection()) {
+            List<Field> keyFields = getKey(entityClass);
+            List<Field> nameFields = getBillCode(entityClass);
+            String keysCondition = keyFields.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(" OR "));
+            String namesCondition = nameFields.stream().map(f -> colName(f) + " LIKE ?").collect(Collectors.joining(" OR "));
+
+            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1} OR {2}", tblName(entityClass), keysCondition, namesCondition);
+            System.out.println(sql);
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            int index = 1;
+            for (Field field : keyFields) {
+                ps.setObject(index++, any);
+            }
+            for (Field field : nameFields) {
+                ps.setObject(index++, "%" + any + "%"); // Tìm kiếm theo mẫu billCode
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                T entity = readResultSet(rs, entityClass);
+                return entity;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public T add(T entity) {
         try (Connection conn = new MySqlConnection().getConnection()) {
             List<Field> fields = getColumns((Class<T>) entity.getClass());
@@ -320,6 +351,12 @@ public class RepositoryImpl<T> implements Repository<T> {
         List<Field> fields = getColumns(entityClass);
         return fields.stream()
                 .filter(f -> Objects.nonNull(f.getAnnotation(EmpID.class)))
+                .collect(Collectors.toList());
+    }
+    private List<Field> getBillCode(Class<T> entityClass) {
+        List<Field> fields = getColumns(entityClass);
+        return fields.stream()
+                .filter(f -> Objects.nonNull(f.getAnnotation(BillCode.class)))
                 .collect(Collectors.toList());
     }
     // </editor-fold>

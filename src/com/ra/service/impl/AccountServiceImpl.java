@@ -21,9 +21,10 @@ public class AccountServiceImpl implements AccountService {
     public Account login(String user, String pass) {
         for (Account account : accountRepository.findAll(Account.class)) {
             if (account.getUserName().equals(user) && account.getPassword().equals(pass)) {
+                Storage.current_account = account;
                 Storage.current_user = account.getUserName();
                 System.out.println("Đăng nhập thành công!");
-                System.out.println("Xin chào " + Storage.current_user);
+                System.out.println("Xin chào " + Storage.current_user+ " mã nhân viên: " + Storage.current_account.getEmpId()) ;
                 return account;
             }
         }

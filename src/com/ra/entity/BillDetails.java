@@ -7,7 +7,7 @@ import com.ra.util.Table;
 @Table(name = "bill_details")
 public class BillDetails {
     @Id
-    @Column(name = "Bill_Details_Id")
+    @Column(name = "Bill_Detail_Id")
     private long billDetailId;
     @Column(name = "Bill_Id")
     private long billId;
@@ -20,6 +20,12 @@ public class BillDetails {
 
     public BillDetails() {
     }
+    public BillDetails(String productId, int quantity, float price) {
+        this.productId = productId;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
 
     public BillDetails(long billDetailId, long billId, String productId, int quantity, float price) {
         this.billDetailId = billDetailId;
@@ -67,5 +73,16 @@ public class BillDetails {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "BillDetails{" +
+                "billDetailId=" + billDetailId +
+                ", billId=" + billId +
+                ", productId='" + productId + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                '}';
     }
 }
