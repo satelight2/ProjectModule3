@@ -34,12 +34,13 @@ public class ProductMenu {
                        showProductList();
                        break;
                    case 2:
+                       System.out.println("Thêm mới sản phẩm");
                         addProduct();
                        break;
                    case 3:
                        System.out.println("Thực hiện cập nhật Sản phẩm");
                        System.out.println("Nhập mã sản phẩm cần cập nhật: ");
-                          Product updatePro = productService.findbyID(Console.scanner.nextLine());
+                          Product updatePro = productService.findAny(Console.scanner.nextLine());
                             if(updatePro != null){
                                 System.out.println("Nhập tên sản phẩm: ");
                                 updatePro.setProductName(Console.scanner.nextLine());
@@ -49,7 +50,7 @@ public class ProductMenu {
                                 updatePro.setCreated(uDate);
                                 System.out.println("Nhập lô chứa sản phẩm: ");
                                 updatePro.setBatch(Integer.parseInt(Console.scanner.nextLine()));
-                                System.out.println("Nhập trạng thái sản phẩm: ");
+                                System.out.println("Nhập trạng thái sản phẩm: true/false ");
                                 updatePro.setProductStatus(Boolean.parseBoolean(Console.scanner.nextLine()));
                                 if(productService.updateProduct(updatePro) != null){
                                     System.out.println("Cập nhật sản phẩm thành công");
@@ -64,7 +65,8 @@ public class ProductMenu {
                    case 4:
                        System.out.println("Tìm kiếm sản phẩm");
                        System.out.println("Nhập tên sản phẩm cần tìm: ");
-                       Product searchPro = productService.searchProductByName(Console.scanner.nextLine());
+                       String namePro = Console.scanner.nextLine();
+                       Product searchPro = productService.findAny(namePro);
                        if(searchPro != null){
                            System.out.println(searchPro.getProductId() + " - " + searchPro.getProductName() + " - " + searchPro.getManufacturer() + " - " + searchPro.getCreated() + " - " + searchPro.getBatch() + " - " + searchPro.getQuantity() + " - " + searchPro.isProductStatus());
                           }else {
@@ -74,7 +76,7 @@ public class ProductMenu {
                    case 5:
                        System.out.println("Cập nhật trạng thái sản phẩm");
                        System.out.println("Nhập mã sản phẩm cần cập nhật: ");
-                          Product updateStatus = productService.findbyID(Console.scanner.nextLine());
+                          Product updateStatus = productService.findAny(Console.scanner.nextLine());
                           if(updateStatus != null){
                               System.out.println("Nhập trạng thái sản phẩm: ");
                               System.out.println("0. Hoạt động (true)");
@@ -121,7 +123,7 @@ public class ProductMenu {
             System.out.println("2. Trang sau");
             System.out.println("3. Quay lại menu chính");
             System.out.print("Lựa chọn của bạn là: ");
-            int choice = Console.scanner.nextInt();
+            int choice = Integer.parseInt(Console.scanner.nextLine());
             switch (choice) {
                 case 1:
                     if (page > 1) {

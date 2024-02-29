@@ -5,6 +5,8 @@ import com.ra.entity.Product;
 import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.BillService;
+import com.ra.util.BillCode;
+import com.ra.util.Id;
 
 import java.util.List;
 
@@ -21,8 +23,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill findbyID(String id) {
-        return null;
+    public Bill findAny(Object keys) {
+        return this.billRepository.findWithAnything(Bill.class, Id.class, BillCode.class,keys);
     }
 
     @Override
@@ -30,13 +32,6 @@ public class BillServiceImpl implements BillService {
         return this.billRepository.edit(bill);
     }
 
-    @Override
-    public Bill searchProductByName(String name) {
-        return null;
-    }
 
-    @Override
-    public Bill findByBillCodeOrID(String any) {
-        return this.billRepository.findByBillCodeOrID(Bill.class, any);
-    }
+
 }

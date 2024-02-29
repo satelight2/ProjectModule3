@@ -8,8 +8,7 @@ import java.util.List;
 public interface EmployeeService {
     List<Employee> findAll();
     Employee addProduct(Employee product);
-    Employee findbyID(String id);
+    Employee findAny(Object... keys);
     Employee updateProduct(Employee product);
-    Employee searchProductByNameOrID(String name);
     List<Employee> findPagination(int startPosition, int maxResult);
 }

@@ -4,7 +4,10 @@ import com.ra.entity.Product;
 import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.ProductService;
+import com.ra.util.Id;
+import com.ra.util.Name;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
@@ -24,9 +27,14 @@ public class ProductServiceImpl implements ProductService {
         return this.productRepository.add(product);
     }
 
+//    @Override
+//    public Product findbyID(String id) {
+//        return this.productRepository.findId(Product.class, id);
+//    }
+
     @Override
-    public Product findbyID(String id) {
-        return this.productRepository.findId(Product.class, id);
+    public Product findAny(Object... keys)   {
+        return this.productRepository.findWithAnything(Product.class,Id.class, Name.class,keys);
     }
 
 
@@ -35,10 +43,10 @@ public class ProductServiceImpl implements ProductService {
         return this.productRepository.edit(product);
     }
 
-    @Override
-    public Product searchProductByName(String name) {
-        return this.productRepository.findByName(Product.class, name);
-    }
+//    @Override
+//    public Product searchProductByName(String name) {
+//        return this.productRepository.findByName(Product.class, name);
+//    }
 
     @Override
     public List<Product> findPagination(int startPosition, int maxResult) {

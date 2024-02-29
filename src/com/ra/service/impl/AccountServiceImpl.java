@@ -6,7 +6,10 @@ import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.AccountService;
 import com.ra.service.EmployeeService;
+import com.ra.util.EmpID;
+import com.ra.util.Id;
 import com.ra.util.Storage;
+import com.ra.util.Username;
 
 import java.util.List;
 
@@ -48,26 +51,32 @@ public class AccountServiceImpl implements AccountService {
         return this.accountRepository.edit(product);
     }
 
-    @Override
-    public Account findByEmpID(String empID) {
-        return this.accountRepository.findByEmpID(Account.class, empID);
-    }
 
+
+    @Override
+    public Account findAny(Object... keys) {
+        return this.accountRepository.findWithAnything(Account.class, Username.class, EmpID.class, keys);
+    }
 
 
     @Override
     public Account findByUsernameOrEmployeeName(String searchTerm) {
         // Tìm kiếm tài khoản theo username
-        Account accountByUsername = this.accountRepository.findByUsername(Account.class,searchTerm);
+        Account accountByUsername = findAny(searchTerm);
         if (accountByUsername != null) {
             return accountByUsername;
         }
 
         // Nếu không tìm thấy theo username, thử tìm theo tên nhân viên
         EmployeeService employeeService = new EmployeeServiceImpl();
-        Employee employee = employeeService.searchProductByNameOrID(searchTerm);
+        Employee employee = employeeService.findAny(searchTerm);
         if (employee != null) {
-            return this.accountRepository.findByEmpID(Account.class,employee.getEmpId());
+            List<Account> accountList = findAll();
+            for (Account account : accountList) {
+                if (account.getEmpId().equals(employee.getEmpId())) {
+                    return account;
+                }
+            }
         }
 
         // Nếu không tìm thấy theo cả username và tên nhân viên, trả về null

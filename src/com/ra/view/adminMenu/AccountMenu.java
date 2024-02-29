@@ -53,7 +53,7 @@ public class AccountMenu {
                         Employee employee;
                         do {
                             empID = Console.scanner.nextLine();
-                            employee = employeeService.findbyID(empID);
+                            employee = employeeService.findAny(empID);
                             if (employee == null) {
                                 System.out.println("Mã nhân viên không tồn tại. Vui lòng nhập lại:");
                             }

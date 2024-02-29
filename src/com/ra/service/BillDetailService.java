@@ -8,7 +8,7 @@ import java.util.List;
 public interface BillDetailService {
     List<BillDetails> findAll();
     BillDetails addBillDetails(BillDetails bill);
-    BillDetails findbyID(Object key);
+    BillDetails findAny(Object key);
     BillDetails updateBillDetails(BillDetails bill);
-    BillDetails searchProductByName(String name);
+
 }

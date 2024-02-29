@@ -67,7 +67,7 @@ public class EmployeeMenu {
                             System.out.println("Cập nhật thông tin nhân viên");
                             System.out.println("Nhập tên hoặc mã nhân viên cần cập nhật: ");
                             String updateKey = Console.scanner.nextLine();
-                            Employee updateE = employeeService.searchProductByNameOrID(updateKey);
+                            Employee updateE = employeeService.findAny(updateKey);
                             if(updateE != null){
                                 System.out.println("Nhập tên nhân viên: ");
                                 updateE.setEmpName(Console.scanner.nextLine());
@@ -98,7 +98,7 @@ public class EmployeeMenu {
                             System.out.println("Cập nhật trạng thái nhân viên");
                             System.out.println("Nhập tên hoặc mã nhân viên cần cập nhật: ");
                             String updateStatusKey = Console.scanner.nextLine();
-                            Employee updateStatusE = employeeService.searchProductByNameOrID(updateStatusKey);
+                            Employee updateStatusE = employeeService.findAny(updateStatusKey);
                             if(updateStatusE != null){
                                 System.out.println("Nhập trạng thái nhân viên: ");
                                 System.out.println("0 .Hoạt động");
@@ -124,7 +124,7 @@ public class EmployeeMenu {
                                 if(employeeService.updateProduct(updateStatusE) != null){
                                     // neu EmpStatus = 1 hoac 2 thi cap nhat lai account
                                     if(updateStatusE.getEmpStatus() == 1 || updateStatusE.getEmpStatus() == 2){
-                                        Account account = accountService.findByEmpID(updateStatusE.getEmpId());
+                                        Account account = accountService.findAny(updateStatusE.getEmpId());
 
                                         if(account != null){
                                             account.setAccStatus(false);
@@ -149,7 +149,7 @@ public class EmployeeMenu {
                             System.out.println("Tìm kiếm nhân viên theo tên hoặc mã nhân viên");
                             System.out.println("Nhập tên hoặc mã nhân viên cần tìm kiếm: ");
                             String keyword = Console.scanner.nextLine();
-                            Employee employee1 = employeeService.searchProductByNameOrID(keyword);
+                            Employee employee1 = employeeService.findAny(keyword);
                             if(employee1 != null){
                                 System.out.println(employee1.toString());
                             }else{
