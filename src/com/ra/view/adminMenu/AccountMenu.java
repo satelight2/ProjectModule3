@@ -2,9 +2,16 @@ package com.ra.view.adminMenu;
 
 import com.ra.entity.Account;
 import com.ra.entity.Employee;
+import com.ra.model.ConstStatus;
+import com.ra.model.Header;
+import com.ra.model.PermissionType;
+import com.ra.model.TableForm;
 import com.ra.service.impl.AccountServiceImpl;
 import com.ra.service.impl.EmployeeServiceImpl;
 import com.ra.util.Console;
+import com.ra.util.font.MessageCustom;
+
+import static com.ra.model.Header.printSeparator;
 
 public class AccountMenu {
     public static void aMenu(){
@@ -27,8 +34,9 @@ public class AccountMenu {
                 switch (choose) {
                     case 1:
                         System.out.println("Danh sách tài khoản");
+                        Header.accounts();
                         for(Account account : accountService.findAll()){
-                            System.out.println(account.toString());
+                            printAccount(account);
                         }
                         break;
                     case 2:
@@ -55,7 +63,7 @@ public class AccountMenu {
                             empID = Console.scanner.nextLine();
                             employee = employeeService.findAny(empID);
                             if (employee == null) {
-                                System.out.println("Mã nhân viên không tồn tại. Vui lòng nhập lại:");
+                                MessageCustom.objectNotExist();
                             }
                             account.setEmpId(empID);
                         } while (employee == null);
@@ -63,7 +71,7 @@ public class AccountMenu {
                         System.out.println("0. Block");
                         System.out.println("1. Active");
                         System.out.println("Lựa chọn của bạn là: ");
-                        if(Console.scanner.nextLine().equals("0")){
+                        if(Integer.parseInt(Console.scanner.nextLine()) == 0){
                             account.setAccStatus(false);
                         }else {
                             account.setAccStatus(true);
@@ -71,9 +79,9 @@ public class AccountMenu {
 
 
                         if( accountService.addAccount(account) != null){
-                            System.out.println("Thêm tài khoản thành công");
+                            MessageCustom.createdSuccess();
                         }else {
-                            System.out.println("Thêm tài khoản thất bại");
+                            MessageCustom.createdFailure();
                         }
 
                         break;
@@ -83,6 +91,8 @@ public class AccountMenu {
                         String keyUpdate = Console.scanner.nextLine();
                         Account updateAcc = accountService.findByUsernameOrEmployeeName(keyUpdate);
                         if(updateAcc != null){
+                            Header.accounts();
+                            printAccount(updateAcc);
                             System.out.println(updateAcc.toString());
                             System.out.println("Nhập trạng thái tài khoản: ");
                             System.out.println("0. Block");
@@ -92,20 +102,20 @@ public class AccountMenu {
                             if(choice == 1) {
                                 updateAcc.setAccStatus(true);
                                 if(accountService.updateAcc(updateAcc) != null){
-                                    System.out.println("Cập nhật trạng thái tài khoản thành công");
+                                    MessageCustom.updateSuccess();
                                     System.out.println("Tài khoản đã được active");
                                 }
                             }else if(choice == 0){
                                 updateAcc.setAccStatus(false);
                                 if(accountService.updateAcc(updateAcc) != null){
-                                    System.out.println("Cập nhật trạng thái tài khoản thành công");
+                                    MessageCustom.updateSuccess();
                                     System.out.println("Tài khoản đã bị block");
                                 }
                             }
                         }
                         else
                         {
-                            System.out.println("Không tìm thấy tài khoản");
+                            MessageCustom.objectNotExist();
                         }
                         break;
                     case 4:
@@ -114,21 +124,34 @@ public class AccountMenu {
                         String key = Console.scanner.nextLine();
                         Account account1 = accountService.findByUsernameOrEmployeeName(key);
                         if(account1 != null){
-                            System.out.println(account1.toString());
+                            Header.accounts();
+                            printAccount(account1);
                         }else {
-                            System.out.println("Không tìm thấy tài khoản");
+                            MessageCustom.objectNotExist();
                         }
                         break;
                     case 5:
                         check = false;
                         break;
                     default:
-                        System.out.println("Chọn sai mời chọn lại");
+                        MessageCustom.choiceFailure();
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Lựa chọn phải là số nguyên từ 1 - 6");
 
             }
         } while (check);
+    }
+    public static void printAccount(Account acc){
+        String info = String.format(TableForm.accounts.column,
+                acc.getAccId(),
+                acc.getUserName(),
+                acc.getPassword(),
+                acc.isPermission() == (PermissionType.USER) ? "User":"Admin",
+                acc.getEmpId(),
+                acc.isAccStatus() == (ConstStatus.AccountStt.ACTIVE)?"Hoạt động":"Không hoạt động");
+        System.out.println(info);
+        int headerLength = info.length();
+        printSeparator(headerLength);
     }
 }

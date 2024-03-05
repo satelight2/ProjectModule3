@@ -38,6 +38,7 @@ public class Menu {
     }
     public static void logout() {
         Storage.current_user = null;
+        Storage.current_account = null;
         System.out.println("Đăng xuất thành công!");
     }
 

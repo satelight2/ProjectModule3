@@ -1,8 +1,8 @@
 package com.ra.entity;
 
-import com.ra.util.Column;
-import com.ra.util.Id;
-import com.ra.util.Table;
+import com.ra.util.annotation.Column;
+import com.ra.util.annotation.Id;
+import com.ra.util.annotation.Table;
 
 @Table(name = "bill_details")
 public class BillDetails {

@@ -1,12 +1,11 @@
 package com.ra.service.impl;
 
 import com.ra.entity.Bill;
-import com.ra.entity.Product;
 import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.BillService;
-import com.ra.util.BillCode;
-import com.ra.util.Id;
+import com.ra.util.annotation.BillCode;
+import com.ra.util.annotation.Id;
 
 import java.util.List;
 

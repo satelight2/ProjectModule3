@@ -40,7 +40,7 @@ public class MainAdminMenu {
                         break;
                     case 5:
                         System.out.println("Quản lý phiếu xuất");
-                        BillMenu.billMenu();
+                        DeliveryMenu.billMenu();
                         break;
                     case 6:
                         System.out.println("Quản lý báo cáo");

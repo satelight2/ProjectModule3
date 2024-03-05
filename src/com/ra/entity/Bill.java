@@ -1,9 +1,9 @@
 package com.ra.entity;
 
-import com.ra.util.BillCode;
-import com.ra.util.Column;
-import com.ra.util.Id;
-import com.ra.util.Table;
+import com.ra.util.annotation.BillCode;
+import com.ra.util.annotation.Column;
+import com.ra.util.annotation.Id;
+import com.ra.util.annotation.Table;
 
 import java.util.Date;
 

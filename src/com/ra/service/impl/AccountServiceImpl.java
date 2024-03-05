@@ -6,10 +6,9 @@ import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.AccountService;
 import com.ra.service.EmployeeService;
-import com.ra.util.EmpID;
-import com.ra.util.Id;
+import com.ra.util.annotation.EmpID;
 import com.ra.util.Storage;
-import com.ra.util.Username;
+import com.ra.util.annotation.Username;
 
 import java.util.List;
 
@@ -61,13 +60,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByUsernameOrEmployeeName(String searchTerm) {
-        // Tìm kiếm tài khoản theo username
         Account accountByUsername = findAny(searchTerm);
         if (accountByUsername != null) {
             return accountByUsername;
         }
-
-        // Nếu không tìm thấy theo username, thử tìm theo tên nhân viên
         EmployeeService employeeService = new EmployeeServiceImpl();
         Employee employee = employeeService.findAny(searchTerm);
         if (employee != null) {
@@ -77,9 +73,9 @@ public class AccountServiceImpl implements AccountService {
                     return account;
                 }
             }
+            System.out.println("Không tìm thấy tài khoản nào phù hợp với tên nhân viên " + searchTerm);
         }
 
-        // Nếu không tìm thấy theo cả username và tên nhân viên, trả về null
         return null;
     }
 }

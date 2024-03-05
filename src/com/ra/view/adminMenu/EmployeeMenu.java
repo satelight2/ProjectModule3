@@ -2,14 +2,21 @@ package com.ra.view.adminMenu;
 
 import com.ra.entity.Account;
 import com.ra.entity.Employee;
+import com.ra.entity.Product;
+import com.ra.model.ConstStatus;
+import com.ra.model.Header;
+import com.ra.model.TableForm;
 import com.ra.service.impl.AccountServiceImpl;
 import com.ra.service.impl.EmployeeServiceImpl;
 import com.ra.util.Console;
+import com.ra.util.font.MessageCustom;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import static com.ra.model.Header.printSeparator;
 
 public class EmployeeMenu {
     private static final int PAGE_SIZE = 10;
@@ -54,12 +61,32 @@ public class EmployeeMenu {
                             employee.setPhone(Console.scanner.nextLine());
                             System.out.println("Nhập địa chỉ nhân viên: ");
                             employee.setAddress(Console.scanner.nextLine());
+
                             System.out.println("Nhập trạng thái nhân viên: ");
-                            employee.setEmpStatus(Integer.parseInt(Console.scanner.nextLine()));
+                            System.out.println("0 : Hoạt động");
+                            System.out.println("1 : Nghỉ chế độ ");
+                            System.out.println("2 : Nghỉ việc ");
+                            System.out.println("Lựa chọn của bạn là: ");
+                            int status2 = Integer.parseInt(Console.scanner.nextLine());
+                            switch (status2){
+                                case 0:
+                                    employee.setEmpStatus(0);
+                                    break;
+                                case 1:
+                                    employee.setEmpStatus(1);
+
+                                    break;
+                                case 2:
+                                    employee.setEmpStatus(2);
+                                    break;
+                                default:
+                                    MessageCustom.choiceFailure();
+                                    break;
+                            }
                             if(employeeService.addProduct(employee) != null){
-                                System.out.println("Thêm mới nhân viên thành công");
+                               MessageCustom.createdSuccess();
                             }else{
-                                System.out.println("Thêm mới nhân viên thất bại");
+                                MessageCustom.createdFailure();
                             }
 
                             break;
@@ -69,6 +96,8 @@ public class EmployeeMenu {
                             String updateKey = Console.scanner.nextLine();
                             Employee updateE = employeeService.findAny(updateKey);
                             if(updateE != null){
+                                Header.employees();
+                                printEmployeeInfo(updateE);
                                 System.out.println("Nhập tên nhân viên: ");
                                 updateE.setEmpName(Console.scanner.nextLine());
                                 System.out.println("Nhập ngày sinh (theo định dạng dd/MM/yyyy): ");
@@ -83,14 +112,33 @@ public class EmployeeMenu {
                                 System.out.println("Nhập địa chỉ nhân viên: ");
                                 updateE.setAddress(Console.scanner.nextLine());
                                 System.out.println("Nhập trạng thái nhân viên: ");
-                                updateE.setEmpStatus(Integer.parseInt(Console.scanner.nextLine()));
+                                System.out.println("0 : Hoạt động");
+                                System.out.println("1 : Nghỉ chế độ ");
+                                System.out.println("2 : Nghỉ việc ");
+                                System.out.println("Lựa chọn của bạn là: ");
+                                int status1 = Integer.parseInt(Console.scanner.nextLine());
+                                switch (status1){
+                                    case 0:
+                                        updateE.setEmpStatus(0);
+                                        break;
+                                    case 1:
+                                        updateE.setEmpStatus(1);
+
+                                        break;
+                                    case 2:
+                                        updateE.setEmpStatus(2);
+                                        break;
+                                    default:
+                                        MessageCustom.choiceFailure();
+                                        break;
+                                }
                                 if(employeeService.updateProduct(updateE) != null){
-                                    System.out.println("Cập nhật thông tin nhân viên thành công");
+                                    MessageCustom.updateSuccess();
                                 }else{
-                                    System.out.println("Cập nhật thông tin nhân viên thất bại");
+                                    MessageCustom.updateFailure();
                                 }
                             }else{
-                                System.out.println("Không tìm thấy nhân viên");
+                                MessageCustom.objectNotExist();
                             }
 
                             break;
@@ -100,6 +148,8 @@ public class EmployeeMenu {
                             String updateStatusKey = Console.scanner.nextLine();
                             Employee updateStatusE = employeeService.findAny(updateStatusKey);
                             if(updateStatusE != null){
+                                Header.employees();
+                                printEmployeeInfo(updateStatusE);
                                 System.out.println("Nhập trạng thái nhân viên: ");
                                 System.out.println("0 .Hoạt động");
                                 System.out.println("1. Nghỉ chế độ");
@@ -118,31 +168,32 @@ public class EmployeeMenu {
                                         updateStatusE.setEmpStatus(2);
                                         break;
                                     default:
-                                        System.out.println("Lựa chọn không hợp lệ");
+                                        MessageCustom.choiceFailure();
                                         break;
                                 }
                                 if(employeeService.updateProduct(updateStatusE) != null){
-                                    // neu EmpStatus = 1 hoac 2 thi cap nhat lai account
                                     if(updateStatusE.getEmpStatus() == 1 || updateStatusE.getEmpStatus() == 2){
                                         Account account = accountService.findAny(updateStatusE.getEmpId());
 
                                         if(account != null){
                                             account.setAccStatus(false);
                                             if(accountService.updateAcc(account) != null){
-                                                System.out.println("Cập nhật trạng thái tài khoản thành công");
+                                                System.out.println("Account updated ! ");
+                                                MessageCustom.updateSuccess();
                                             }else{
-                                                System.out.println("Cập nhật trạng thái tài khoản thất bại");
+                                                System.out.println("Account updated failed ! ");
+                                                MessageCustom.updateFailure();
                                             }
                                         }else{
-                                            System.out.println("Không tìm thấy tài khoản");
+                                           MessageCustom.objectNotExist();
                                         }
-                                    System.out.println("Cập nhật trạng thái nhân viên thành công");
+
                                 }else{
-                                    System.out.println("Cập nhật trạng thái nhân viên thất bại");
+                                        MessageCustom.updateSuccess();
                                 }
                             }
                             }else{
-                                System.out.println("Không tìm thấy nhân viên");
+                                MessageCustom.objectNotExist();
                             }
                             break;
                         case 5:
@@ -151,16 +202,17 @@ public class EmployeeMenu {
                             String keyword = Console.scanner.nextLine();
                             Employee employee1 = employeeService.findAny(keyword);
                             if(employee1 != null){
-                                System.out.println(employee1.toString());
+                                Header.employees();
+                                printEmployeeInfo(employee1);
                             }else{
-                                System.out.println("Không tìm thấy nhân viên");
+                                MessageCustom.objectNotExist();
                             }
                             break;
                         case 6:
                             check = false;
                             break;
                         default:
-                            System.out.println("Chọn sai mời chọn lại");
+                            MessageCustom.choiceFailure();
                     }
                 } catch (NumberFormatException | ParseException e) {
                     System.err.println("Lựa chọn phải là số nguyên từ 1 - 6");
@@ -172,17 +224,18 @@ public class EmployeeMenu {
          EmployeeServiceImpl employeeService = new EmployeeServiceImpl();
         int page = 1;
         while (true) {
-            System.out.println("Danh sách sản phẩm:");
+            System.out.println("Danh sách nhân viên:");
             List<Employee> employeeList = employeeService.findPagination(page, PAGE_SIZE);
+            Header.employees();
             for (Employee employee : employeeList) {
-                System.out.println(employee.toString()); // In thông tin của từng sản phẩm
+                printEmployeeInfo(employee);
             }
             System.out.println("Trang " + page);
             System.out.println("1. Trang trước");
             System.out.println("2. Trang sau");
             System.out.println("3. Quay lại menu chính");
             System.out.print("Lựa chọn của bạn là: ");
-            int choice = Console.scanner.nextInt();
+            int choice = Integer.parseInt(Console.scanner.nextLine());
             switch (choice) {
                 case 1:
                     if (page > 1) {
@@ -201,9 +254,22 @@ public class EmployeeMenu {
                 case 3:
                     return;
                 default:
-                    System.out.println("Lựa chọn không hợp lệ.");
+                    MessageCustom.choiceFailure();
             }
         }
+    }
+    public static void printEmployeeInfo(Employee e) {
+        String info = String.format(TableForm.employees.column,
+                e.getEmpId(),
+                e.getEmpName(),
+                e.getBirthOfDate(),
+                e.getEmail(),
+                e.getPhone(),
+                e.getAddress(),
+                e.getEmpStatus() == (ConstStatus.EmpStt.ACTIVE) ? "Hoạt động" : e.getEmpStatus() == (ConstStatus.EmpStt.SLEEP) ? "Nghỉ chế độ" : "Nghỉ việc");
+        System.out.println(info);
+        int headerLength = info.length();
+        printSeparator(headerLength);
     }
 };
 

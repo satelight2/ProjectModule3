@@ -2,6 +2,9 @@ package com.ra.repository.impl;
 
 import com.ra.repository.Repository;
 import com.ra.util.*;
+import com.ra.util.annotation.Column;
+import com.ra.util.annotation.Id;
+import com.ra.util.annotation.Table;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -20,7 +23,7 @@ public class RepositoryImpl<T> implements Repository<T> {
         List<T> result = new ArrayList<>();
         try  (Connection conn = new MySqlConnection().getConnection()) {
             String sql = MessageFormat.format("SELECT * FROM {0}", tblName(entityClass));
-            System.out.println(sql);
+//            System.out.println(sql);
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             List<Field> fields = getColumns(entityClass);
@@ -56,27 +59,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             return result;
     }
 
-//    @Override
-//    public T findId(Class<T> entityClass, Object... keys) {
-//        try  (Connection conn = new MySqlConnection().getConnection()) {
-//            List<Field> keysField = getKey(entityClass);
-//            String keysName = keysField.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
-//            String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1}", tblName(entityClass), keysName);
-//            System.out.println(sql);
-//            PreparedStatement ps = conn.prepareStatement(sql);
-//            int index = 1;
-//            for (Object key : keys)
-//                ps.setObject(index++, key);
-//            ResultSet rs = ps.executeQuery();
-//            while (rs.next()) {
-//                T entity = readResultSet(rs, entityClass);
-//                return entity;
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//        return null;
-//    }
+
 
     @Override
     public T findWithAnything(Class<T> entityClass, Class<? extends Annotation> annotationClass1,Class<? extends Annotation> annotationClass2, Object... keys) {
@@ -93,7 +76,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             String namesCondition = con2.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(" OR "));
 
             String sql = MessageFormat.format("SELECT * FROM {0} WHERE {1} OR {2}", tblName(entityClass), keysCondition, namesCondition);
-            System.out.println(sql);
+            //System.out.println(sql);
 
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
@@ -123,7 +106,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             String columns = fields.stream().map(this::colName).collect(Collectors.joining(","));
             String values = fields.stream().map(f -> "?").collect(Collectors.joining(","));
             String sql = MessageFormat.format("INSERT INTO {0}({1}) VALUES ({2})", tblName((Class<T>) entity.getClass()), columns, values);
-            System.out.println(sql);
+            //System.out.println(sql);
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
             for(Field f : fields) {
@@ -147,7 +130,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             String columns = updateFields.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
             String key = keyFields.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
             String sql = MessageFormat.format("UPDATE {0} SET {1} WHERE {2}", tblName((Class<T>) entity.getClass()), columns, key);
-            System.out.println(sql);
+            //System.out.println(sql);
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
             for(Field f : updateFields) {
@@ -172,7 +155,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             List<Field> keysField = getKey(entityClass);
             String keysName = keysField.stream().map(f -> colName(f) + " = ?").collect(Collectors.joining(","));
             String sql = MessageFormat.format("DELETE FROM {0} WHERE {1}", tblName(entityClass), keysName);
-            System.out.println(sql);
+            //System.out.println(sql);
             PreparedStatement ps = conn.prepareStatement(sql);
             int index = 1;
             for (Object key : keys)

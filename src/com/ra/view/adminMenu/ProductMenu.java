@@ -1,12 +1,17 @@
 package com.ra.view.adminMenu;
 
 import com.ra.entity.Product;
+import com.ra.model.Header;
+import com.ra.model.TableForm;
 import com.ra.service.impl.ProductServiceImpl;
 import com.ra.util.Console;
+import com.ra.util.font.MessageCustom;
 
 
 import java.util.Date;
 import java.util.List;
+
+import static com.ra.model.Header.printSeparator;
 
 public class ProductMenu {
     public static ProductServiceImpl productService = new ProductServiceImpl();
@@ -42,6 +47,8 @@ public class ProductMenu {
                        System.out.println("Nhập mã sản phẩm cần cập nhật: ");
                           Product updatePro = productService.findAny(Console.scanner.nextLine());
                             if(updatePro != null){
+                                Header.products();
+                                printProductInfo(updatePro);
                                 System.out.println("Nhập tên sản phẩm: ");
                                 updatePro.setProductName(Console.scanner.nextLine());
                                 System.out.println("Nhập nhà sản xuất: ");
@@ -53,12 +60,12 @@ public class ProductMenu {
                                 System.out.println("Nhập trạng thái sản phẩm: true/false ");
                                 updatePro.setProductStatus(Boolean.parseBoolean(Console.scanner.nextLine()));
                                 if(productService.updateProduct(updatePro) != null){
-                                    System.out.println("Cập nhật sản phẩm thành công");
+                                   MessageCustom.updateSuccess();
                                 }else {
-                                    System.out.println("Cập nhật sản phẩm thất bại");
+                                    MessageCustom.updateFailure();
                                 }
                             }else {
-                                System.out.println("Không tìm thấy sản phẩm");
+                                MessageCustom.objectNotExist();
 
                             }
                        break;
@@ -68,9 +75,10 @@ public class ProductMenu {
                        String namePro = Console.scanner.nextLine();
                        Product searchPro = productService.findAny(namePro);
                        if(searchPro != null){
-                           System.out.println(searchPro.getProductId() + " - " + searchPro.getProductName() + " - " + searchPro.getManufacturer() + " - " + searchPro.getCreated() + " - " + searchPro.getBatch() + " - " + searchPro.getQuantity() + " - " + searchPro.isProductStatus());
+                           Header.products();
+                           printProductInfo(searchPro);
                           }else {
-                           System.out.println("Không tìm thấy sản phẩm");
+                           MessageCustom.objectNotExist();;
                           }
                        break;
                    case 5:
@@ -78,6 +86,8 @@ public class ProductMenu {
                        System.out.println("Nhập mã sản phẩm cần cập nhật: ");
                           Product updateStatus = productService.findAny(Console.scanner.nextLine());
                           if(updateStatus != null){
+                              Header.products();
+                              printProductInfo(updateStatus);
                               System.out.println("Nhập trạng thái sản phẩm: ");
                               System.out.println("0. Hoạt động (true)");
                               System.out.println("1. Không hoạt động (false)");
@@ -88,12 +98,12 @@ public class ProductMenu {
                                     updateStatus.setProductStatus(false);
                               }
                               if(productService.updateProduct(updateStatus) != null){
-                                  System.out.println("Cập nhật trạng thái sản phẩm thành công");
+                                 MessageCustom.updateSuccess();
                               }else {
-                                  System.out.println("Cập nhật trạng thái sản phẩm thất bại");
+                                 MessageCustom.updateFailure();
                               }
                             }else {
-                              System.out.println("Không tìm thấy sản phẩm");
+                              MessageCustom.objectNotExist();
                           }
                        break;
 
@@ -101,7 +111,7 @@ public class ProductMenu {
                        check = false;
                        break;
                    default:
-                       System.out.println("Chọn sai mời chọn lại");
+                      MessageCustom.choiceFailure();
                }
            } catch (NumberFormatException e) {
                System.err.println("Lựa chọn phải là số nguyên từ 1 - 6");
@@ -115,8 +125,9 @@ public class ProductMenu {
         while (true) {
             System.out.println("Danh sách sản phẩm:");
             List<Product> productList = productService.findPagination(page, PAGE_SIZE);
+            Header.products();
             for (Product product : productList) {
-                System.out.println(product.getProductId() + " - " + product.getProductName() + " - " + product.getManufacturer() + " - " + product.getCreated() + " - " + product.getBatch() + " - " + product.getQuantity() + " - " + product.isProductStatus()); // In thông tin của từng sản phẩm
+               printProductInfo(product);
             }
             System.out.println("Trang " + page);
             System.out.println("1. Trang trước");
@@ -142,7 +153,7 @@ public class ProductMenu {
                 case 3:
                     return;
                 default:
-                    System.out.println("Lựa chọn không hợp lệ.");
+                    MessageCustom.choiceFailure();
             }
         }
     }
@@ -165,10 +176,23 @@ public class ProductMenu {
         product.setProductStatus(Boolean.parseBoolean(Console.scanner.nextLine()));
 
         if( productService.addProduct(product) != null){
-            System.out.println("Thêm sản phẩm thành công");
+            MessageCustom.createdSuccess();
         }else {
-            System.out.println("Thêm sản phẩm thất bại");
+            MessageCustom.createdFailure();
         }
+    }
+    public static void printProductInfo(Product pro) {
+        String info = String.format(TableForm.products.column,
+                pro.getProductId(),
+                pro.getProductName(),
+                pro.getManufacturer(),
+                pro.getCreated(),
+                pro.getBatch(),
+                pro.getQuantity(),
+                pro.isProductStatus() ? "Hoạt Động" : "Không hoạt động");
+        System.out.println(info);
+        int headerLength = info.length();
+        printSeparator(headerLength);
     }
 }
 

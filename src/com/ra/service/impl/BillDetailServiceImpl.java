@@ -4,7 +4,7 @@ import com.ra.entity.BillDetails;
 import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.BillDetailService;
-import com.ra.util.Id;
+import com.ra.util.annotation.Id;
 
 import java.util.List;
 

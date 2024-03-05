@@ -1,10 +1,13 @@
 package com.ra.view.adminMenu;
 
-import com.ra.manager.ReceiptManager;
+import com.ra.manager.BillManager;
+import com.ra.model.BillType;
+import com.ra.util.font.MessageCustom;
+;
 
 public class ReceiptMenu{
     public static void reMenu(){
-        ReceiptManager rm = new ReceiptManager();
+        BillManager billManager = new BillManager();
         boolean check = true;
         do {
             System.out.println("******************RECEIPT MANAGEMENT****************");
@@ -23,34 +26,34 @@ public class ReceiptMenu{
                 switch (choose) {
                     case 1:
                         System.out.println("1. Danh sách phiếu nhập");
-                        rm.show();
+                        billManager.show(BillType.IMPORT);
                         break;
                     case 2:
                         System.out.println("2. Tạo phiếu nhập");
-                        rm.add();
+                        billManager.add(BillType.IMPORT);
                         break;
                     case 3:
                         System.out.println("3. Cập nhật thông tin phiếu nhập");
-                        rm.update();
+                        billManager.update(BillType.IMPORT);
                         break;
                     case 4:
                         System.out.println("4. Chi tiết phiếu nhập");
-                        rm.showDetails();
+                        billManager.showDetails(BillType.IMPORT);
                         break;
                     case 5:
                         System.out.println("5. Duyệt phiếu nhập");
-                        rm.approve();
+                        billManager.approve(BillType.IMPORT);
                         break;
                     case 6:
                         System.out.println("6. Tìm kiếm phiếu nhập");
-                        rm.search();
+                        billManager.search(BillType.IMPORT);
                         break;
 
                     case 7:
                         check = false;
                         break;
                     default:
-                        System.out.println("Chọn sai mời chọn lại");
+                        MessageCustom.choiceFailure();
                 }
             } catch (NumberFormatException e) {
                 System.err.println("Lựa chọn phải là số nguyên từ 1 - 7");

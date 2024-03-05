@@ -6,17 +6,17 @@ public interface ConstStatus {
         boolean INACTION = false;
     }
     interface BillStt {
-        byte CREATE = 0;
-        byte CANCEL = 1;
-        byte APPROVE = 2;
+        int CREATE = 0;
+        int CANCEL = 1;
+        int APPROVE = 2;
     }
     interface AccountStt {
         boolean ACTIVE = true;
         boolean BLOCK = false;
     }
     interface EmpStt {
-        byte ACTIVE = 0;
-        byte SLEEP = 1;
-        byte QUIT = 2;
+        int ACTIVE = 0;
+        int SLEEP = 1;
+        int QUIT = 2;
     }
 }

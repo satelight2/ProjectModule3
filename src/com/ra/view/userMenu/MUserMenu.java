@@ -1,15 +1,13 @@
 package com.ra.view.userMenu;
 
-import com.ra.entity.BillDetails;
 import com.ra.manager.BillManager;
-import com.ra.manager.ReceiptManager;
+
+import com.ra.model.BillType;
 import com.ra.util.Console;
-import com.ra.view.adminMenu.*;
 
 public class MUserMenu {
     public static void roleUser() {
         BillManager billManager = new BillManager();
-        ReceiptManager receiptManager = new ReceiptManager();
         boolean check = true;
         do {
             System.out.println("MENU USER");
@@ -30,35 +28,35 @@ public class MUserMenu {
                 switch (choose){
                     case 1:
                         System.out.println("1. Danh sách phiếu nhập theo trạng thái");
-                        receiptManager.show();
+                        billManager.show(BillType.IMPORT);
                         break;
                     case 2:
                         System.out.println("2. Tạo phiếu nhập");
-                        receiptManager.add();
+                        billManager.add(BillType.IMPORT);
                         break;
                     case 3:
                         System.out.println("3. Cập nhật phiếu nhập");
-                        receiptManager.update();
+                        billManager.update(BillType.IMPORT);
                         break;
                     case 4:
                         System.out.println("4. Tìm kiếm phiếu nhập");
-                        receiptManager.search();
+                        billManager.search(BillType.IMPORT);
                         break;
                     case 5:
                         System.out.println("5. Danh sách phiếu xuất theo trạng thái");
-                        billManager.show();
+                        billManager.show(BillType.EXPORT);
                         break;
                     case 6:
                         System.out.println("6. Tạo phiếu xuất");
-                        billManager.add();
+                        billManager.add(BillType.EXPORT);
                         break;
                     case 7:
                         System.out.println("7. Cập nhật phiếu xuất");
-                        billManager.update();
+                        billManager.update(BillType.EXPORT);
                         break;
                     case 8:
                         System.out.println("8. Tìm kiếm phiếu xuất");
-                        billManager.search();
+                        billManager.search(BillType.EXPORT);
                         break;
 
                     case 9:

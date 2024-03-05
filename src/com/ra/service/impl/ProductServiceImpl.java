@@ -4,10 +4,9 @@ import com.ra.entity.Product;
 import com.ra.repository.Repository;
 import com.ra.repository.impl.RepositoryImpl;
 import com.ra.service.ProductService;
-import com.ra.util.Id;
-import com.ra.util.Name;
+import com.ra.util.annotation.Id;
+import com.ra.util.annotation.Name;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {

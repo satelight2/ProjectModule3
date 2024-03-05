@@ -1,6 +1,6 @@
 package com.ra.entity;
 
-import com.ra.util.*;
+import com.ra.util.annotation.*;
 
 @Table(name = "accounts")
 public class Account {
